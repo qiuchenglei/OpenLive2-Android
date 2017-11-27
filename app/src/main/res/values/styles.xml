@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <string-array name="string_array_resolutions">
+        <item>160x120</item>
+        // 120P
+        <item>320x180</item>
+        // 180P
+        <item>320x240</item>
+        // 240P the default one
+        <item>640x360</item>
+        // 360P
+        <item>640x480</item>
+        // 480P
+        <item>1280x720</item>
+        // 720P
+    </string-array>
+
+    <string-array name="string_array_frame_rate">
+        <item>15</item>
+        // 120P
+        <item>15</item>
+        // 180P
+        <item>15</item>
+        // 240P
+        <item>15</item>
+        // 360P
+        <item>15</item>
+        // 480P
+        <item>15</item>
+        // 720P
+    </string-array>
+
+    <string-array name="string_array_bit_rate">
+        <item>80</item>
+        // 120P
+        <item>160</item>
+        // 180P
+        <item>200</item>
+        // 240P
+        <item>400</item>
+        // 360P
+        <item>500</item>
+        // 480P
+        <item>1000</item>
+        // 720P
+    </string-array>
+
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>

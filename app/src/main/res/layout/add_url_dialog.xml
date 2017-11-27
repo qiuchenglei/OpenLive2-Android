@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#ffffffff"
+    android:alpha="0.5"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/et_cdn_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:lines="1"
+        android:gravity="center"
+        android:hint="please input cdn url!"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_cdn_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="9dp"
+        android:text="Publish Now"
+        android:background="#ffffff"
+        android:layout_gravity="center"/>
+</LinearLayout>

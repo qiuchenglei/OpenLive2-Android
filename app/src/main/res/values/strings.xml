@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Open Live</string>
+    <string name="title_activity_live_rome">LiveRomeActivity</string>
+
+    //申请连麦 - 踢人
+    <string name="link_requests">连麦申请</string>
+    <string name="link_force_t">踢人</string>
+
+</resources>

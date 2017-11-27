@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_m"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/btn_setting"
+        android:src="@drawable/btn_setting_android_2x"
+        android:padding="12dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/btn_click"
+        android:layout_marginEnd="4dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_setting"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Welcome to Open Live!"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/tv_room_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:hint="Input name of the Live?"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btn_join"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:background="@drawable/btn_click"
+            android:textColor="#0D5FFF"
+            android:text="Join Room !" />
+    </LinearLayout>
+</RelativeLayout>

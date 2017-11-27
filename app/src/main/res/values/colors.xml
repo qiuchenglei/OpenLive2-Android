@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#b2ebf2</color>
+
+    <color name="co">#e0f2f1</color>
+
+
+    <color name="lightColorAccent">#30FF4081</color>
+
+    <color name="dark_black">#CC262626</color>
+
+    <color name="setting_title_c">#ffffff</color>
+
+    //btn click bg
+    <color name="color_pressed_false">#b2dfdb</color>
+    <color name="color_pressed_true">#4db6ac</color>
+
+    <color name="color_cancel_pressed_false">#f36c60</color>
+    <color name="color_cancel_pressed_true">#dd191d</color>
+
+    <color name="color_confirm_pressed_false">#80cbc4</color>
+    <color name="color_confirm_pressed_true">#009688</color>
+
+    <color name="color_ignore_pressed_false">#c5e1a5</color>
+    <color name="color_ignore_pressed_true">#8bc34a</color>
+</resources>

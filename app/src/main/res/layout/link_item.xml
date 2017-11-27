@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#ffffff"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_link_uid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:gravity="center"
+        android:hint="uid"
+        android:lines="1"
+        android:minHeight="48dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_link_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_cancel_bg"
+            android:text="cancel"
+            android:layout_margin="2dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btn_link_confirm"
+            android:layout_width="0dp"
+            android:background="@drawable/btn_confirm_bg"
+            android:layout_height="match_parent"
+            android:text="confirm"
+            android:layout_margin="2dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+</LinearLayout>
