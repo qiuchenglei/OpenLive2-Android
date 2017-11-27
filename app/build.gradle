@@ -20,7 +20,7 @@ android {
 
     sourceSets {
         main {
-            jniLibs.srcDirs = ['src/main/libs']
+            jniLibs.srcDirs = ['../../../libs']
         }
     }
 
@@ -35,5 +35,5 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.0'
     compile 'com.android.support:design:25.3.0'
     testCompile 'junit:junit:4.12'
-    compile files('libs/agora-rtc-sdk.jar')
+    compile files('../../../libs/agora-rtc-sdk.jar')
 }

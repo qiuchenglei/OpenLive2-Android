@@ -789,7 +789,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
             return;
 
         String url = mEtCdnUrl.getText().toString();
-        url = "rtmp://vid-218.pull.chinanetcenter.broadcastapp.agora.io/live/123";
         if (!mCdnDataSet.contains(url)) {
             mCdnDataSet.add(url);
             mCdnAdpapter.notifyDataSetChanged();
