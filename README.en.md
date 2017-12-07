@@ -5,6 +5,7 @@
 The OpenLive for Android Sample App is an open-source demo that will help you get live video broadcasting integrated directly into your Android applications using the Agora Video SDK.
 
 With this sample app, you can:
+OpenLive2-Android is demo for live sdk 2.0.1.
 
 - Join / leave channel
 - Set role as broadcaster or audience
@@ -27,7 +28,7 @@ First, create a developer account at [Agora.io](https://dashboard.agora.io/signi
 <string name="private_app_id"><#YOUR APP ID#></string>
 ```
 
-Next, download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/download/). Unzip the downloaded SDK package and copy ***.jar** under **libs** to **app/libs**, **arm64-v8a**/**x86**/**armeabi-v7a** under **libs** to **app/src/main/libs**.
+Next, download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/download/). Unzip the downloaded SDK package and copy ***.jar** under **libs** to **../../libs/**, **arm64-v8a**/**x86**/**armeabi-v7a** under **libs** to **../../libs/**.
 
 Finally, open project with Android Studio, connect your Android device, build and run.
 

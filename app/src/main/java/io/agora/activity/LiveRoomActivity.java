@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
     private ImageView mIvUserAccount;
     private ImageView mIvCloseVideo;
     private TextView mTvRoomName;
-    private ListView mLvInfo;
+
     private ListView mLvCdnList;
     private PopupWindow mCdnPopWindow;
     private List<String> mCdnDataSet;
@@ -86,15 +86,15 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
     private ImageView mIvAddCdn;
     private PopupWindow mAccountPopWindow;
     private ListView mLvAccountList;
+
     private List<AccountData> mAccountDataSet;
     private AccountAdapter mAccountAdapter;
-    //live engine init
     private LiveEngine mAgoraLiveEngine;
-    //live subscriber
+
     private LiveSubscriber mAgoraLiveSubscriber;
     private LivePublisher mAgoraLivePublisher;
     private String mRoomName = "";
-    //audio mute status false-mute true-unMute
+
     private boolean mMuteStatus = true;
     private android.support.v7.app.AlertDialog mLinkDialog;
     private android.support.v7.app.AlertDialog.Builder mLinkDialogBuilder;
@@ -104,9 +104,10 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
     private ArrayList<Integer> mAllowedUserList;
     private InChannelMessageListAdapter mMessageAdapter;
     private ArrayList<Message> mMessageList;
-    /**
-     * init Agora LivePublisherHandler
-     */
+
+    private boolean isJoinSuccess = false;
+    private int locUid = 0;
+
     private LivePublisherHandler mAgoraLivePublisherHandler = new LivePublisherHandler() {
         @Override
         public void onStreamUrlPublished(String url) {
@@ -147,9 +148,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    /**
-     * init Agora LiveSubscriberHandler
-     */
     private LiveSubscriberHandler mAgoraLiveSubcriberHandler = new LiveSubscriberHandler() {
 
         @Override
@@ -199,44 +197,37 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         public void onStreamTypeChanged(int streamType, int uid) {
             super.onStreamTypeChanged(streamType, uid);
         }
-
-
     };
 
-    /**
-     * init LiveEngineHandler
-     */
     private LiveEngineHandler mAgoraLiveEngineHandler = new LiveEngineHandler() {
-
         @Override
         public void onWarning(int warningCode) {
-            //super.onWarning(warningCode);
+            super.onWarning(warningCode);
             Log.e("onJoinChannel-->warning", warningCode + "");
         }
 
         @Override
         public void onError(int errorCode) {
-            //super.onError(errorCode);
+            super.onError(errorCode);
         }
 
         @Override
-        public void onJoinChannel(String channel, int uid, int elapsed) {
-            //super.onJoinChannel(channel, uid, elapsed);
-
-            Log.e(TAG, "onJoinChannel-->" + channel + " , " + uid + " , " + elapsed);
+        public void onJoinChannel(String channel, final int uid, int elapsed) {
+            super.onJoinChannel(channel, uid, elapsed);
+            isJoinSuccess = true;
+            locUid = uid;
             sendMessageOnMainThread(new Message("加入频道：" + channel));
         }
 
         @Override
         public void onLeaveChannel() {
-            //super.onLeaveChannel();
-            Log.e("onChannel-->", "leave success");
+            super.onLeaveChannel();
             sendMessageOnMainThread(new Message("离开频道"));
         }
 
         @Override
         public void onRejoinChannel(String channel, int uid, int elapsed) {
-            //super.onRejoinChannel(channel, uid, elapsed);
+            super.onRejoinChannel(channel, uid, elapsed);
             Log.e(TAG, "onRejoinChannel-->" + channel + " , " + uid + " , " + elapsed);
             sendMessageOnMainThread(new Message("重新加入频道：" + channel));
         }
@@ -248,15 +239,13 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onConnectionInterrupted() {
-            //super.onConnectionInterrupted();
-            Log.e(TAG, "onConnectionInterrupted-->");
+            super.onConnectionInterrupted();
             sendMessageOnMainThread(new Message("连接被打断"));
         }
 
         @Override
         public void onConnectionLost() {
             super.onConnectionLost();
-            Log.e(TAG, "onConnectionLost-->");
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -299,11 +288,9 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
                     if (index != -1) {
                         if (accepted) {
                             mAccountDataSet.get(index).mLinkState = LinkState.ReqesuestT;
-                            //new String((ownerUid & 0xFFFFFFFFL) + "接收连麦")));
                             sendMessageOnMainThread(new Message(ownerUid + "接受请求"));
                         } else {
                             mAccountDataSet.get(index).mLinkState = LinkState.RequestLink;
-                            //new String((ownerUid & 0xFFFFFFFFL) + "拒绝连麦")));
                             sendMessageOnMainThread(new Message(ownerUid + "拒绝请求"));
                         }
 
@@ -333,7 +320,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
             });
 
             sendMessageOnMainThread(new Message("被" + ownerUid + "移除"));
-
         }
     };
 
@@ -354,9 +340,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         joinChannel();
     }
 
-    /**
-     * init widget
-     */
     public void initWidget() {
         mVideoContainer = (GridVideoViewContainer) findViewById(R.id.grid_video_view_container);
         mVideoContainer.initViewContainer(LiveRoomActivity.this, 0, mUidsList);
@@ -382,7 +365,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         mLinkAdapter = new LinkAdapter(new WeakReference<Context>(this), new ArrayList<Integer>(), new LinkListener() {
             @Override
             public void onConfirmClicked(final int uid) {
-//                vibrator.vibrate(500);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -391,8 +373,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
                             mAllowedUserList.add(new Integer(uid));
 
                         mLinkAdapter.removeLinkers(uid);
-                        //new String("确认" + (uid & 0xFFFFFFFFL) + "的连麦")));
-
                     }
                 });
 
@@ -406,7 +386,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
                     public void run() {
                         mAgoraLivePublisher.answerPublishingRequest(uid, false);
                         mLinkAdapter.removeLinkers(uid);
-                        // new String("接收" + (uid & 0xFFFFFFFFL) + "的连麦")));
                     }
                 });
 
@@ -423,9 +402,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    /**
-     * init user account window
-     */
     public void initAccountPop() {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         ViewGroup mAccountView = (ViewGroup) layoutInflater.inflate(R.layout.account_list, null);
@@ -439,9 +415,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         mAccountPopWindow.setFocusable(true);
     }
 
-    /**
-     * init cdn window
-     */
     public void initCdnPop() {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         ViewGroup mCndView = (ViewGroup) layoutInflater.inflate(R.layout.cdn_url_list, null);
@@ -470,9 +443,7 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
             mCdnDialog.show();
     }
 
-    /**
-     * init data set
-     */
+
     public void initDataSet() {
         mAccountDataSet = new ArrayList<>();
         mAccountAdapter = new AccountAdapter(this, mAccountDataSet, this);
@@ -483,9 +454,7 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         mLvCdnList.setAdapter(mCdnAdpapter);
     }
 
-    /**
-     * init Agora engine
-     */
+
     public void initEngine() {
         mAgoraLiveEngine = LiveEngine.createLiveEngine(getApplicationContext(), getResources().getString(R.string.private_app_id)
                 , mAgoraLiveEngineHandler);
@@ -493,15 +462,8 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         mAgoraLivePublisher = new LivePublisher(mAgoraLiveEngine, mAgoraLivePublisherHandler);
 
         mAgoraLiveSubscriber = new LiveSubscriber(mAgoraLiveEngine, mAgoraLiveSubcriberHandler);
-
-
-        mAgoraLiveEngine.getRtcEngine().setParameters("{\"rtc.log_filter\":65535}");
-        mAgoraLiveEngine.getRtcEngine().setLogFile("/sdcard/open_live.log");
     }
 
-    /**
-     * register click listener
-     */
     public void registerListener() {
         mIvPublish.setOnClickListener(this);
         mIvChangeCamera.setOnClickListener(this);
@@ -516,21 +478,10 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         LiveChannelConfig mLiveChannelConfig = new LiveChannelConfig();
         mLiveChannelConfig.videoEnabled = true;
         int joinRet = mAgoraLiveEngine.joinChannel(mRoomName, getResources().getString(R.string.private_app_id), mLiveChannelConfig, 0);
-        Log.e("onJoinRet-->", joinRet + "");
     }
 
-
-    /**
-     * when user account list had clicked , we could get Uid and subscript status here.
-     *
-     * @param id            uid
-     * @param currentStatus 当前订阅状态
-     * @param mediaType     流类型
-     */
     @Override
     public void onAccountClick(final int id, final boolean currentStatus, int mediaType) {
-        Log.e("onAccountClick-->", "id--" + id + " , isChecked-->" + currentStatus);
-
         if (isFinishing())
             return;
 
@@ -583,7 +534,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
                         }
 
                         mAccountAdapter.addAccount(uid, currentIsChecked, mediaType, LinkState.RequestLink);
-                        //String("T除 " + (uid & 0xFFFFFFFFL))));
                         sendMessageOnMainThread(new Message("T除" + uid));
                     }
                 }
@@ -593,63 +543,56 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_user_account:
-                actionAccount();
-                break;
-            case R.id.iv_live_room_publish:
-                if (mIvMute.getVisibility() == View.VISIBLE) {
-                    enablePublisher(false);
-                } else {
-                    enablePublisher(true);
-                }
-                break;
-            case R.id.iv_live_room_change_camera:
-                mAgoraLivePublisher.switchCamera();
-                break;
-            case R.id.iv_live_room_mute:
-                muteOrUnmuteAudio(!mMuteStatus);
-                break;
-            case R.id.iv_close_video:
-                finish();
-                break;
-            case R.id.iv_live_room_cdn:
-                actionCnd();
-                break;
-            case R.id.iv_cdn_bottom:
-                showDialog();
-                mCdnPopWindow.dismiss();
-                break;
-            case R.id.btn_cdn_publish:
-                doPublishClick();
-                break;
-            case R.id.iv_live_room_linker:
-                showMDialog(DIALOG_TYPE_ACTION);
-                break;
-            default:
-                break;
+        if (isJoinSuccess) {
+            switch (view.getId()) {
+                case R.id.iv_user_account:
+                    actionAccount();
+                    break;
+                case R.id.iv_live_room_publish:
+                    if (mIvMute.getVisibility() == View.VISIBLE) {
+                        enablePublisher(false);
+                    } else {
+                        enablePublisher(true);
+                    }
+                    break;
+                case R.id.iv_live_room_change_camera:
+                    mAgoraLivePublisher.switchCamera();
+                    break;
+                case R.id.iv_live_room_mute:
+                    muteOrUnmuteAudio(!mMuteStatus);
+                    break;
+                case R.id.iv_close_video:
+                    finish();
+                    break;
+                case R.id.iv_live_room_cdn:
+                    actionCnd();
+                    break;
+                case R.id.iv_cdn_bottom:
+                    showDialog();
+                    mCdnPopWindow.dismiss();
+                    break;
+                case R.id.btn_cdn_publish:
+                    doPublishClick();
+                    break;
+                case R.id.iv_live_room_linker:
+                    showMDialog(DIALOG_TYPE_ACTION);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            Toast.makeText(this, "Please wait for join success", Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * when you click user account icon, show popwindow
-     */
     public void actionAccount() {
         mAccountPopWindow.showAsDropDown(mIvUserAccount);
     }
 
-    /**
-     * when you click cdn icon, show popwindow
-     */
     public void actionCnd() {
         mCdnPopWindow.showAtLocation(mIvCnd, Gravity.RIGHT | Gravity.BOTTOM, 0, CommonFunc.dip2px(this, 56));
     }
 
-    /**
-     * 开始或者停止推流
-     *
-     * @param enable true-start false-finish
-     */
     public void enablePublisher(boolean enable) {
         showOrHideBottomViewBar(enable);
         if (enable) {
@@ -684,28 +627,23 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
             SurfaceView mAgoraSurfaceView = RtcEngine.CreateRendererView(LiveRoomActivity.this);
             mAgoraSurfaceView.setZOrderOnTop(true);
             mAgoraSurfaceView.setZOrderMediaOverlay(true);
+            mUidsList.put(locUid, mAgoraSurfaceView);
 
-            mUidsList.put(0, mAgoraSurfaceView);
-            mVideoContainer.initViewContainer(LiveRoomActivity.this, 0, mUidsList);
-            mAgoraLiveEngine.startPreview(mAgoraSurfaceView, Constants.RENDER_MODE_HIDDEN);
+            mVideoContainer.initViewContainer(LiveRoomActivity.this, locUid, mUidsList);
+            mAgoraLiveEngine.startPreview(mUidsList.get(locUid), Constants.RENDER_MODE_HIDDEN);
         } else {
             LiveChannelConfig mLiveChannelConfig = new LiveChannelConfig();
             mLiveChannelConfig.videoEnabled = true;
             mAgoraLiveEngine.stopPreview();
             mAgoraLivePublisher.unpublish();
-            mUidsList.remove(0);
+            mUidsList.remove(locUid);
             if (mUidsList.size() == 0)
-                mVideoContainer.initViewContainer(this, 0, mUidsList);
+                mVideoContainer.initViewContainer(this, locUid, mUidsList);
             else
                 mVideoContainer.initViewContainer(this, mUidsList.keySet().iterator().next(), mUidsList);
         }
     }
 
-    /**
-     * 隐藏或者显示底部按钮
-     *
-     * @param show ture-show false-hide
-     */
     public void showOrHideBottomViewBar(boolean show) {
         if (show) {
             mIvPublish.setImageResource(R.drawable.btn_join_cancel);
@@ -720,11 +658,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    /**
-     * mute or unmute local audio
-     *
-     * @param mute false-unmute true-mute
-     */
     public void muteOrUnmuteAudio(boolean mute) {
         if (mute) {
             mIvMute.setImageResource(R.drawable.btn_mute);
@@ -740,15 +673,16 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mAgoraLiveEngine != null) {
 
-                    if (mUidsList.containsKey(0)) {
+                    if (mUidsList.containsKey(locUid)) {
                         mAgoraLiveEngine.stopPreview();
                         mAgoraLivePublisher.unpublish();
-                        mUidsList.remove(0);
+                        mUidsList.remove(locUid);
                     }
 
                     if (mUidsList.size() != 0) {
@@ -759,12 +693,12 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
                     }
 
                     mUidsList.clear();
+                    isJoinSuccess = false;
                     mAgoraLiveEngine.leaveChannel();
                     mMessageList.clear();
                 }
             }
         });
-
     }
 
     @Override

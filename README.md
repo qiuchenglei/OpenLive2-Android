@@ -3,9 +3,9 @@
 *Read this in other languages: [English](README.en.md)*
 
 这个开源示例项目演示了如何快速集成 Agora 视频 SDK，实现多人视频连麦直播。
+OpenLive2 demo适配大直播sdk
 
 在这个示例项目中包含了以下功能：
-
 - 加入通话和离开通话；
 - 主播和观众模式切换；
 - 静音和解除静音；
@@ -27,7 +27,8 @@ Agora 视频 SDK 支持 iOS / Android / Windows / macOS 等多个平台，你可
 <string name="private_app_id"><#YOUR APP ID#></string>
 ```
 
-然后在 [Agora.io SDK](https://www.agora.io/cn/download/) 下载 **视频通话 + 直播 SDK**，解压后将其中的 **libs** 文件夹下的 ***.jar** 复制到本项目的 **app/libs** 下，其中的 **libs** 文件夹下的 **arm64-v8a**/**x86**/**armeabi-v7a** 复制到本项目的 **app/src/main/libs** 下。
+然后在 [Agora.io SDK](https://www.agora.io/cn/download/) 下载 **视频通话 + 直播 SDK**，解压后将其中的 **libs** 文件夹下的 ***.jar** 复制到本项目的 **../../libs** 下，其中的 **libs** 文件夹下的 **arm64-v8a**/**x86**/**armeabi-v7a** 复制到本项目的 **../../libs** 下。
+请务必检查app/build.gradle中关于.jar .so的配置
 
 最后用 Android Studio 打开该项目，连上设备，编译并运行。
 
