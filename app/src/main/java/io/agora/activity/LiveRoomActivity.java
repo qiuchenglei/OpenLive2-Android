@@ -312,7 +312,6 @@ public class LiveRoomActivity extends AppCompatActivity implements View.OnClickL
                         for (int i = 0; i < mAccountDataSet.size(); i++) {
                             mAccountDataSet.get(i).mLinkState = LinkState.RequestLink;
                         }
-
                         mAccountAdapter.notifyDataSetChanged();
                     }
 
