@@ -21,15 +21,15 @@ Agora 视频 SDK 支持 iOS / Android / Windows / macOS 等多个平台，你可
 - [OpenLive-macOS](https://github.com/AgoraIO/OpenLive-macOS)
 
 ## 运行示例程序
-首先在 [Agora.io 注册](https://dashboard.agora.io/cn/signup/) 注册账号，并创建自己的测试项目，获取到 AppID。将 AppID 填写进 "app/src/main/res/values/strings_config.xml"
+第一步: 在 [Agora.io 注册](https://dashboard.agora.io/cn/signup/) 注册账号，并创建自己的测试项目，获取到 AppID。将 AppID 填写进 "app/src/main/res/values/strings_config.xml"
 
 ```
 <string name="private_app_id"><#YOUR APP ID#></string>
 ```
 
-第一步: 在 [Agora.io SDK](https://www.agora.io/cn/download/) 下载 **视频通话 + 直播 SDK**，解压后将其中的 **libs** 文件夹下的 ***.jar** 复制到本项目的 **app/libs** 下，其中的 **libs** 文件夹下的 **arm64-v8a**/**x86**/**armeabi-v7a** 复制到本项目的 **app/src/main/jniLibs** 下。
+第二步: 在 [Agora.io SDK](https://www.agora.io/cn/download/) 下载 **视频通话 + 直播 SDK**，解压后将其中的 **libs** 文件夹下的 ***.jar** 复制到本项目的 **app/libs** 下，其中的 **libs** 文件夹下的 **arm64-v8a**/**x86**/**armeabi-v7a** 复制到本项目的 **app/src/main/jniLibs** 下。
 
-第二步: 在本项目的 "app/build.gradle" 文件依赖属性中添加如下依赖关系：
+第三步: 在本项目的 "app/build.gradle" 文件依赖属性中添加如下依赖关系：
 
 ```
 compile fileTree(dir: 'libs', include: ['*.jar'])
