@@ -28,7 +28,13 @@ First, create a developer account at [Agora.io](https://dashboard.agora.io/signi
 <string name="private_app_id"><#YOUR APP ID#></string>
 ```
 
-Next, download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/download/). Unzip the downloaded SDK package and copy ***.jar** under **libs** to **../../libs/**, **arm64-v8a**/**x86**/**armeabi-v7a** under **libs** to **../../libs/**.
+Then, download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/download/). Unzip the downloaded SDK package and copy ***.jar** under **libs** to **app/libs**, **arm64-v8a**/**x86**/**armeabi-v7a** under **libs** to **app/src/main/jniLibs**.
+
+At last, add the fllowing code in the property of the dependence of the "app/build.gradle":
+
+```
+compile fileTree(dir: 'libs', include: ['*.jar'])
+```
 
 Finally, open project with Android Studio, connect your Android device, build and run.
 
