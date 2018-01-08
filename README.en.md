@@ -22,15 +22,15 @@ Agora Video SDK supports iOS / Android / Windows / macOS etc. You can find demos
 - [OpenLive-macOS](https://github.com/AgoraIO/OpenLive-macOS)
 
 ## Running the App
-First, create a developer account at [Agora.io](https://dashboard.agora.io/signin/), and obtain an App ID. Update "app/src/main/res/values/strings_config.xml" with your App ID.
+The first step: create a developer account at [Agora.io](https://dashboard.agora.io/signin/), and obtain an App ID. Update "app/src/main/res/values/strings_config.xml" with your App ID.
 
 ```
 <string name="private_app_id"><#YOUR APP ID#></string>
 ```
 
-Then, download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/download/). Unzip the downloaded SDK package and copy ***.jar** under **libs** to **app/libs**, **arm64-v8a**/**x86**/**armeabi-v7a** under **libs** to **app/src/main/jniLibs**.
+The second step: download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/download/). Unzip the downloaded SDK package and copy ***.jar** under **libs** to **app/libs**, **arm64-v8a**/**x86**/**armeabi-v7a** under **libs** to **app/src/main/jniLibs**.
 
-At last, add the fllowing code in the property of the dependence of the "app/build.gradle":
+The third step: add the fllowing code in the property of the dependence of the "app/build.gradle":
 
 ```
 compile fileTree(dir: 'libs', include: ['*.jar'])
